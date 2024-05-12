@@ -45,6 +45,24 @@ def generate_random_solution():
     random.shuffle(cities)
     return [0] + cities
 
+def get_closest_city(current_city, available_cities):
+    heuristic_list = [(x, matrix[current_city][x]) for x in available_cities]
+    heuristic_list = sorted(heuristic_list, key=lambda k: k[1])
+
+    return heuristic_list[0][0]
+
+def generate_greedy_solution():
+    sol = [0]
+
+    all_cities = list(range(1, num_cities))
+
+    while len(sol) < num_cities:
+        next_city = get_closest_city(sol[-1], all_cities)
+        sol.append(next_city)
+        all_cities.remove(next_city)
+
+    return sol
+
 def generate_population(population_size):
     solutions = []
     for i in range(population_size):
@@ -170,4 +188,4 @@ def genetic_algorithm(num_iterations, population_size, reproduction_rate):
 
     print(f"\n\nFinal Solution: {best_sol} \nScore: {best_score}\n")
 
-genetic_algorithm(15000, 25, 0.25)
+genetic_algorithm(10000, 25, 0.25)
