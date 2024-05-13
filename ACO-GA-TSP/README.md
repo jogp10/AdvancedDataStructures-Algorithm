@@ -1,4 +1,4 @@
-# parallel-aco-tsp :ant:
+# ACO-GA-TSP :ant:
 
 **Parallel** Ant Colony Optimization (ACO) algorithm applied to the Traveller Salesman Problem (TSP).
 

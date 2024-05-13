@@ -111,7 +111,7 @@ class _Formiga(object):
                 for j in range(grafo.rank)
             ] for i in range(grafo.rank)
         ]
-        inicio = 0
+        inicio = random.randint(0, grafo.rank - 1)  # inicio aleatório
         self.tabu.append(inicio)
         self.atual = inicio
         self.permitido.remove(inicio)
