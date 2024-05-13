@@ -41,6 +41,7 @@ def calc_distancia(cidade1, cidade2):
 
 
 def main():
+    data_size = 30
     cidades = []
     pontos = []
 
@@ -53,6 +54,7 @@ def main():
 
     matriz_adjacencia = []
     rank = len(cidades)
+    rank = data_size if data_size < rank else rank
     for i in range(rank):  # calculo da matriz de adjacencia
         linha = []
         for j in range(rank):

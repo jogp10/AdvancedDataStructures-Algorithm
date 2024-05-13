@@ -59,7 +59,7 @@ def parse_cities(data_size):
     return distance_matrix
 
 
-matrix = parse_cities(31)
+matrix = parse_cities(30)
 num_cities = len(matrix)
 neighbour_rate = num_cities // 8
 
@@ -171,7 +171,7 @@ def genetic_algorithm(num_iterations, population_size, reproduction_rate):
     best_score = evaluate_solution(best_sol)
     current_iteration = 0
 
-    print(f"\n\nInitial Solution: {best_sol} \nScore: {best_score}\n")
+    # print(f"\n\nInitial Solution: {best_sol} \nScore: {best_score}\n")
 
     while current_iteration < num_iterations:
         first_offspring = best_sol
@@ -217,6 +217,6 @@ def genetic_algorithm(num_iterations, population_size, reproduction_rate):
         population = remove_least_fit(population, population_size)
         current_iteration += 1
 
-    print(f"\n\nFinal Solution: {best_sol} \nScore: {best_score}\n")
+    print(f"custo total: {best_score}, caminho: {best_sol}")
 
 genetic_algorithm(10000, 5, 0.25)
