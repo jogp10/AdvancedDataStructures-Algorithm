@@ -2,33 +2,64 @@ import copy
 import numpy as np
 import random
 import csv
+import math
+
+def calc_distancia(cidade1, cidade2):
+    """Calcula distância entre duas cidades
+
+    Keyword arguments:
+    cidade1 -- dict com coordenadas [x,y] da cidade
+    cidade2 -- dict com coordenadas [x,y] da cidade
+    """
+    return math.sqrt((cidade1[1] - cidade2[1])**2 +
+                     (cidade1[2] - cidade2[2])**2)
+
+# def parse_cities(data_size):
+#     data_size += 1
+#     counter = 0
+#     matrix = [[0 for _ in range(data_size)] for _ in range(data_size)]
+
+#     with open('distances.csv', encoding="utf8") as file:
+#         read = csv.reader(file)
+#         next(read)
+#         src_id = 0
+#         dest_id = 0
+#         for row in read:
+#             for i in range(data_size + 1):
+#                 if i == 0:
+#                     continue
+#                 else:
+#                     matrix[src_id][dest_id] = float(row[i])
+#                 dest_id += 1
+#             dest_id = 0
+#             src_id += 1
+#             counter += 1
+#             if counter == data_size:
+#                 break
+
+#     return matrix
 
 def parse_cities(data_size):
-    data_size += 1
-    counter = 0
-    matrix = [[0 for _ in range(data_size)] for _ in range(data_size)]
+    cities = []
 
-    with open('distances.csv', encoding="utf8") as file:
-        read = csv.reader(file)
-        next(read)
-        src_id = 0
-        dest_id = 0
-        for row in read:
-            for i in range(data_size + 1):
-                if i == 0:
-                    continue
-                else:
-                    matrix[src_id][dest_id] = float(row[i])
-                dest_id += 1
-            dest_id = 0
-            src_id += 1
-            counter += 1
-            if counter == data_size:
-                break
+    with open('./data/chn31.tsp', 'r') as file:
+        for line in file:
+            parts = line.strip().split()
+            city_id = parts[0]
+            x = float(parts[1])
+            y = float(parts[2])
+            cities.append((city_id, x, y))
+            
+    distance_matrix = [[0] * data_size for _ in range(data_size)]
+    
+    for i in range(data_size):
+        for j in range(data_size):
+            distance_matrix[i][j] = calc_distancia(cities[i], cities[j])
+    
+    return distance_matrix
 
-    return matrix
 
-matrix = parse_cities(50)
+matrix = parse_cities(31)
 num_cities = len(matrix)
 neighbour_rate = num_cities // 8
 
@@ -180,12 +211,12 @@ def genetic_algorithm(num_iterations, population_size, reproduction_rate):
             best_sol = min(population, key=lambda x: evaluate_solution(x))
             best_score = evaluate_solution(best_sol)
 
-            print(
-                f"Iteration {current_iteration}: upgrade \n\t\tScore: {temp_score} -> {best_score}\n")
+            # print(
+                # f"Iteration {current_iteration}: upgrade \n\t\tScore: {temp_score} -> {best_score}\n")
 
         population = remove_least_fit(population, population_size)
         current_iteration += 1
 
     print(f"\n\nFinal Solution: {best_sol} \nScore: {best_score}\n")
 
-genetic_algorithm(10000, 25, 0.25)
+genetic_algorithm(10000, 5, 0.25)
