@@ -2,6 +2,8 @@
 import math
 import sys
 import argparse
+import pandas
+import csv
 
 from plot import plot
 
@@ -28,49 +30,41 @@ if args.is_parallel:
 else:
     from aco import ACO, Grafo
 
+def parse_cities(data_size):
+    data_size += 1
+    counter = 0
+    matrix = [[0 for _ in range(data_size)] for _ in range(data_size)]
 
-def calc_distancia(cidade1, cidade2):
-    """Calcula distância entre duas cidades
+    with open('distances.csv', encoding="utf8") as file:
+        read = csv.reader(file)
+        next(read)
+        src_id = 0
+        dest_id = 0
+        for row in read:
+            for i in range(data_size + 1):
+                if i == 0:
+                    continue
+                else:
+                    matrix[src_id][dest_id] = float(row[i])
+                dest_id += 1
+            dest_id = 0
+            src_id += 1
+            counter += 1
+            if counter == data_size:
+                break
 
-    Keyword arguments:
-    cidade1 -- dict com coordenadas [x,y] da cidade
-    cidade2 -- dict com coordenadas [x,y] da cidade
-    """
-    return math.sqrt((cidade1['x'] - cidade2['x'])**2 +
-                     (cidade1['y'] - cidade2['y'])**2)
+    return matrix
 
 
 def main():
-    data_size = 30
-    cidades = []
-    pontos = []
-
-    with open('./data/chn31.tsp') as f:  # leitura das cidades
-        for linha in f.readlines():
-            cidade = linha.split(' ')
-            cidades.append(
-                dict(index=int(cidade[0]), x=int(cidade[1]), y=int(cidade[2])))
-            pontos.append((int(cidade[1]), int(cidade[2])))
-
-    matriz_adjacencia = []
-    rank = len(cidades)
-    rank = data_size if data_size < rank else rank
-    for i in range(rank):  # calculo da matriz de adjacencia
-        linha = []
-        for j in range(rank):
-            linha.append(calc_distancia(cidades[i], cidades[j]))
-        matriz_adjacencia.append(linha)
-
+    matrix = parse_cities(50)
     aco = ACO(cont_formiga=100, geracoes=10, alfa=1.0, beta=10.0, ro=0.5, Q=10)
-    grafo = Grafo(matriz_adjacencia, rank)
+    grafo = Grafo(matrix, len(matrix))
     try:
         caminho, custo = aco.resolve(grafo)
         print('custo total: {}, caminho: {}'.format(custo, caminho))
-        if args.plot:
-            plot(pontos, caminho)
     except TypeError:
         pass
-
 
 if __name__ == '__main__':
     main()

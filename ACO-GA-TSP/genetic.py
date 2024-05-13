@@ -14,52 +14,52 @@ def calc_distancia(cidade1, cidade2):
     return math.sqrt((cidade1[1] - cidade2[1])**2 +
                      (cidade1[2] - cidade2[2])**2)
 
-# def parse_cities(data_size):
-#     data_size += 1
-#     counter = 0
-#     matrix = [[0 for _ in range(data_size)] for _ in range(data_size)]
-
-#     with open('distances.csv', encoding="utf8") as file:
-#         read = csv.reader(file)
-#         next(read)
-#         src_id = 0
-#         dest_id = 0
-#         for row in read:
-#             for i in range(data_size + 1):
-#                 if i == 0:
-#                     continue
-#                 else:
-#                     matrix[src_id][dest_id] = float(row[i])
-#                 dest_id += 1
-#             dest_id = 0
-#             src_id += 1
-#             counter += 1
-#             if counter == data_size:
-#                 break
-
-#     return matrix
-
 def parse_cities(data_size):
-    cities = []
+    data_size += 1
+    counter = 0
+    matrix = [[0 for _ in range(data_size)] for _ in range(data_size)]
 
-    with open('./data/chn31.tsp', 'r') as file:
-        for line in file:
-            parts = line.strip().split()
-            city_id = parts[0]
-            x = float(parts[1])
-            y = float(parts[2])
-            cities.append((city_id, x, y))
+    with open('distances.csv', encoding="utf8") as file:
+        read = csv.reader(file)
+        next(read)
+        src_id = 0
+        dest_id = 0
+        for row in read:
+            for i in range(data_size + 1):
+                if i == 0:
+                    continue
+                else:
+                    matrix[src_id][dest_id] = float(row[i])
+                dest_id += 1
+            dest_id = 0
+            src_id += 1
+            counter += 1
+            if counter == data_size:
+                break
+
+    return matrix
+
+# def parse_cities(data_size):
+#     cities = []
+
+#     with open('./data/chn31.tsp', 'r') as file:
+#         for line in file:
+#             parts = line.strip().split()
+#             city_id = parts[0]
+#             x = float(parts[1])
+#             y = float(parts[2])
+#             cities.append((city_id, x, y))
             
-    distance_matrix = [[0] * data_size for _ in range(data_size)]
+#     distance_matrix = [[0] * data_size for _ in range(data_size)]
     
-    for i in range(data_size):
-        for j in range(data_size):
-            distance_matrix[i][j] = calc_distancia(cities[i], cities[j])
+#     for i in range(data_size):
+#         for j in range(data_size):
+#             distance_matrix[i][j] = calc_distancia(cities[i], cities[j])
     
-    return distance_matrix
+#     return distance_matrix
 
 
-matrix = parse_cities(30)
+matrix = parse_cities(50)
 num_cities = len(matrix)
 neighbour_rate = num_cities // 8
 
